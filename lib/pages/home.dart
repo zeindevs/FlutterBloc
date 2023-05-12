@@ -18,14 +18,44 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            BlocBuilder<CounterBloc, int>(
-              bloc: counter,
-              builder: (context, state) {
-                return Text(
-                  "$state",
-                  style: const TextStyle(fontSize: 50),
-                );
-              },
+            MultiBlocListener(
+              listeners: [
+                BlocListener<ThemeBloc, bool>(
+                  listener: (context, state) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Theme dark active"),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  listenWhen: (previous, current) {
+                    return !current ? true : false;
+                  },
+                ),
+                BlocListener<CounterBloc, int>(
+                  listener: (context, state) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Upper then 10"),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  listenWhen: (previous, current) {
+                    return current > 10 ? true : false;
+                  },
+                ),
+              ],
+              child: BlocBuilder<CounterBloc, int>(
+                bloc: counter,
+                builder: (context, state) {
+                  return Text(
+                    "$state",
+                    style: const TextStyle(fontSize: 50),
+                  );
+                },
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
