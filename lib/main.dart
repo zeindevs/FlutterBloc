@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/routes/routes.dart';
+import 'package:flutter_base/app.dart';
+import 'package:flutter_base/bloc/theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_base/bloc/counter.dart';
+import 'package:flutter_base/pages/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final router = AppRouter();
+  final ThemeBloc theme = ThemeBloc();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // initialRoute: "/",
-      // routes: {
-      //   "/": (context) => BlocProvider.value(
-      //         value: counter,
-      //         child: const HomePage(),
-      //       ),
-      //   "/other": (context) => BlocProvider.value(
-      //         value: counter,
-      //         child: const OtherPage(),
-      //       ),
-      // },
-      onGenerateRoute: router.onRoute,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => CounterBloc()),
+        BlocProvider(create: (context) => theme),
+      ],
+      child: const App(),
     );
   }
 }
