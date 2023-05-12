@@ -7,6 +7,7 @@ class Counter extends Cubit<int> {
   int init;
 
   void increment() => emit(state + 1);
+
   void decrement() => emit(state - 1);
 
   @override

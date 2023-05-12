@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/pages/center_widget.dart';
+import 'package:flutter_base/home/yellow_widget.dart';
 
-class DataWidget extends StatelessWidget {
-  const DataWidget({
+class RedWidget extends StatelessWidget {
+  const RedWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       width: 200,
+      height: 200,
       color: Colors.red,
-      child: const CenterWidget(),
+      child: const YellowWidget(),
     );
   }
 }
