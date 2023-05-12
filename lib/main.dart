@@ -1,4 +1,4 @@
-import "package:flutter/foundation.dart";
+import "package:bloc/bloc.dart";
 import "package:flutter/material.dart";
 
 void main() {
@@ -14,42 +14,63 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class CounterCubit extends Cubit<int> {
+  CounterCubit({this.initialData = 0}) : super(initialData);
+
+  int initialData;
+
+  void increment() {
+    emit(state + 1);
+  }
+
+  void decrement() {
+    emit(state - 1);
+  }
+}
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  Stream<int> countStream() async* {
-    for (int i = 1; i < 10; i++) {
-      await Future.delayed(const Duration(seconds: 1));
-      yield i;
-    }
-  }
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  CounterCubit counter = CounterCubit(initialData: 0);
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode) {
-      print("Rebuild");
-    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stream App"),
+        title: const Text("Cubit Apps"),
       ),
-      body: StreamBuilder<Object>(
-          stream: countStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: Text(
-                "Loading...",
-                style: TextStyle(fontSize: 54),
-              ));
-            } else {
-              return Center(
-                  child: Text(
-                "${snapshot.data}",
-                style: const TextStyle(fontSize: 54),
-              ));
-            }
-          }),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          StreamBuilder<Object>(
+              initialData: counter.initialData,
+              stream: counter.stream,
+              builder: (context, snapshot) {
+                return Center(
+                    child: Text(
+                  "${snapshot.data}",
+                  style: const TextStyle(fontSize: 50),
+                ));
+              }),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  onPressed: () => counter.increment(),
+                  icon: const Icon(Icons.remove)),
+              IconButton(
+                  onPressed: () => counter.decrement(),
+                  icon: const Icon(Icons.add))
+            ],
+          )
+        ],
+      ),
     );
   }
 }
