@@ -16,22 +16,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Block Builder")),
+      appBar: AppBar(title: const Text("Bloc Listener")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BlocBuilder<Counter, int>(
+          BlocListener<Counter, int>(
             bloc: counter,
-            buildWhen: (previous, current) {
+            listener: (context, state) {
               if (kDebugMode) {
-                print(previous);
-                print(current);
+                print(state);
               }
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  duration: Duration(seconds: 1),
+                  content: Text("Odd Number"),
+                ),
+              );
+            },
+            listenWhen: (previous, current) {
               return current % 2 == 0 ? true : false;
             },
-            builder: (context, state) {
-              return Text("$state", style: const TextStyle(fontSize: 50));
-            },
+            child: BlocBuilder<Counter, int>(
+              bloc: counter,
+              builder: (context, state) {
+                return Text("$state", style: const TextStyle(fontSize: 50));
+              },
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
