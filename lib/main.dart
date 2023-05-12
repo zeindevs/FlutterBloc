@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 void main() {
@@ -19,11 +20,15 @@ class HomePage extends StatelessWidget {
   Stream<int> countStream() async* {
     for (int i = 1; i < 10; i++) {
       await Future.delayed(const Duration(seconds: 1));
+      yield i;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print("Rebuild");
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Stream App"),
