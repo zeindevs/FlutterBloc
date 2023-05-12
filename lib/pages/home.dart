@@ -16,16 +16,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Bloc Listener")),
+      appBar: AppBar(title: const Text("Bloc Consumer")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BlocListener<Counter, int>(
+          BlocConsumer<Counter, int>(
             bloc: counter,
+            builder: (context, state) {
+              return Text("$state", style: const TextStyle(fontSize: 50));
+            },
             listener: (context, state) {
-              if (kDebugMode) {
-                print(state);
-              }
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   duration: Duration(seconds: 1),
@@ -33,15 +33,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
+            buildWhen: (previous, current) {
+              return current == 10 ? true : false;
+            },
             listenWhen: (previous, current) {
               return current % 2 == 0 ? true : false;
             },
-            child: BlocBuilder<Counter, int>(
-              bloc: counter,
-              builder: (context, state) {
-                return Text("$state", style: const TextStyle(fontSize: 50));
-              },
-            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
