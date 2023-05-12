@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/bloc/counter.dart';
 import 'package:flutter_base/home/red_widget.dart';
+import 'package:flutter_base/home/other.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +18,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dependency Injection"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: counter,
+                child: const OtherPage(),
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.arrow_forward),
       ),
       body: Center(
         child: Row(
