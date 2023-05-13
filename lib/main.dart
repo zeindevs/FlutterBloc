@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/app.dart';
-import 'package:flutter_base/bloc/theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_base/bloc/counter.dart';
+import 'package:flutter_base/bloc/user.dart';
 import 'package:flutter_base/pages/home.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  final ThemeBloc theme = ThemeBloc();
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => CounterBloc()),
-        BlocProvider(create: (context) => theme),
-      ],
-      child: const App(),
+    return MaterialApp(
+      home: BlocProvider(
+        create: (context) => UserBloc(),
+        child: const HomePage(),
+      ),
     );
   }
 }

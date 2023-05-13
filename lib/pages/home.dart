@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/bloc/counter.dart';
-import 'package:flutter_base/bloc/theme.dart';
+import 'package:flutter_base/bloc/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,71 +7,45 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CounterBloc counter = context.read<CounterBloc>();
-    ThemeBloc theme = context.read<ThemeBloc>();
+    UserBloc user = context.read<UserBloc>();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MultiBlocListener(
-              listeners: [
-                BlocListener<ThemeBloc, bool>(
-                  listener: (context, state) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Theme dark active"),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                  listenWhen: (previous, current) {
-                    return !current ? true : false;
-                  },
-                ),
-                BlocListener<CounterBloc, int>(
-                  listener: (context, state) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Upper then 10"),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                  listenWhen: (previous, current) {
-                    return current > 10 ? true : false;
-                  },
-                ),
-              ],
-              child: BlocBuilder<CounterBloc, int>(
-                bloc: counter,
-                builder: (context, state) {
-                  return Text(
-                    "$state",
-                    style: const TextStyle(fontSize: 50),
-                  );
-                },
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          BlocSelector<UserBloc, Map<String, dynamic>, String>(
+            selector: (state) => state["name"],
+            builder: (context, state) {
+              return Text("Name: $state");
+            },
+          ),
+          BlocSelector<UserBloc, Map<String, dynamic>, int>(
+            selector: (state) => state["age"],
+            builder: (context, state) {
+              return Text("Age: $state");
+            },
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            onChanged: (value) => user.changeName(value),
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () => user.changeAge(user.state["age"] - 1),
+                icon: const Icon(Icons.remove),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                    onPressed: () => counter.remove(),
-                    icon: const Icon(Icons.remove)),
-                IconButton(
-                    onPressed: () => counter.add(),
-                    icon: const Icon(Icons.add)),
-              ],
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => theme.changeTheme(),
+              IconButton(
+                onPressed: () => user.changeAge(user.state["age"] + 1),
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
