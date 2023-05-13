@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/404/404.dart';
+import 'package:flutter_base/404/not_found.dart';
 import 'package:flutter_base/bloc/counter.dart';
 import 'package:flutter_base/home/home.dart';
 import 'package:flutter_base/other/other.dart';
